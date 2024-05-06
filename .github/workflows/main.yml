@@ -1,0 +1,34 @@
+name: Deploy Release to CodeDeploy-1
+
+on:
+  push:
+    tags:
+      - 'deploytest1' # Specify the tag for the release to trigger the workflow
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Extract release zip file
+        run: unzip deploytest1.zip -d release
+
+      - name: Push to AWS CodeDeploy
+        run: |
+          aws deploy push \
+            --application-name demo-cd \
+            --s3-location s3://YourS3BucketName/release/deploytest1.zip \
+            --ignore-hidden-files
+
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ap-south-1
