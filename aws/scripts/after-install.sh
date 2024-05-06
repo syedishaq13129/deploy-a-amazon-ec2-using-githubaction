@@ -1,5 +1,5 @@
 #!/bin/bash
-set -xe
+# set -xe
 
 
 # Copy war file from S3 bucket to tomcat webapp folder
