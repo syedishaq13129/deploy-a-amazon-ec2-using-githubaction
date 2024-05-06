@@ -45,7 +45,7 @@ jobs:
             --application-name YourApplicationName \
             --deployment-group-name YourDeploymentGroupName \
             --description "GitHub Release Deployment" \
-            --s3-location bucket=codedeployanil0605,key=deploytest1.zip
+            --s3-location bucket=codedeployanil0605,key=deploytest1.zip,bundleType=zip
           echo "Deployment triggered."
 
         env:
