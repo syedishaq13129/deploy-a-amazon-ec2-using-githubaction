@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - 'latest' # Specify the tag for the release to trigger the workflow
+      - 'test1.0' # Specify the tag for the release to trigger the workflow
 
 jobs:
   deploy:
