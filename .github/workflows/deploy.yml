@@ -1,4 +1,4 @@
-name: Deploy Release to CodeDeploy-1
+name: Deploy Release to CodeDeploy
 
 on:
   push:
