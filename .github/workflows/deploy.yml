@@ -20,15 +20,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y awscli
 
-      - name: Extract release zip file
-        run: unzip deploytest1.zip -d release
-
-      - name: Push to AWS CodeDeploy
+      - name: Trigger CodeDeploy Deployment
         run: |
-          aws deploy push \
+          aws deploy create-deployment \
             --application-name demo-cd \
-            --s3-location s3://YourS3BucketName/release/deploytest1.zip \
-            --ignore-hidden-files
+            --deployment-group-name YourDeploymentGroupName \
+            --s3-location bucket=YourS3BucketName,key=release/deploytest1.zip \
+            --fileb://deploytest1.zip
 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
