@@ -24,7 +24,7 @@ jobs:
       - name: Push to AWS CodeDeploy
         run: |
           aws deploy push \
-            --application-name YourCodeDeployApplicationName \
+            --application-name demo-cd \
             --s3-location s3://YourS3BucketName/release/deploytest1.zip \
             --ignore-hidden-files
 
