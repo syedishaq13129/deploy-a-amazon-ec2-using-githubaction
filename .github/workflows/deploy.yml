@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - 'deploytest3' # Specify the tag for the release to trigger the workflow
+      - 'deploytest1' # Specify the tag for the release to trigger the workflow
 
 jobs:
   deploy:
@@ -29,13 +29,13 @@ jobs:
       - name: Download Release ZIP
         run: |
           echo "Downloading release ZIP..."
-          curl -L -o deploytest3.zip https://github.com/syedishaq13129/deploy-a-amazon-ec2-using-githubaction/archive/refs/tags/deploytest3.zip
+          curl -L -o deploytest4.zip https://github.com/syedishaq13129/deploy-a-amazon-ec2-using-githubaction/archive/refs/tags/deploytest4.zip
           echo "Download complete."
 
       - name: Upload Release ZIP to S3
         run: |
           echo "Uploading release ZIP to S3..."
-          aws s3 cp deploytest3.zip s3://codedeployanil0605/
+          aws s3 cp deploytest4.zip s3://codedeployanil0605/
           echo "Upload complete."
 
       - name: Trigger CodeDeploy Deployment
@@ -45,7 +45,7 @@ jobs:
             --application-name demo-cd \
             --deployment-group-name demo-dg \
             --description "GitHub Release Deployment" \
-            --s3-location bucket=codedeployanil0605,key=deploytest3.zip,bundleType=zip
+            --s3-location bucket=codedeployanil0605,key=deploytest4.zip,bundleType=zip
           echo "Deployment triggered."
 
         env:
