@@ -19,14 +19,16 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y awscli
+          curl -L -o deploytest1.zip https://github.com/syedishaq13129/deploy-a-amazon-ec2-using-githubaction/archive/refs/tags/deploytest1.zip
+          aws s3 cp deploytest1.zip s3://codedeployanil0605/deploytest1.zip
 
       - name: Trigger CodeDeploy Deployment
         run: |
           aws deploy create-deployment \
-            --application-name demo-cd \
+            --application-name YourApplicationName \
             --deployment-group-name YourDeploymentGroupName \
-            --s3-location bucket=YourS3BucketName,key=release/deploytest1.zip \
-            --fileb://deploytest1.zip
+            --description "GitHub Release Deployment" \
+            --s3-location bucket=codedeployanil0605,key=deploytest1.zip
 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
