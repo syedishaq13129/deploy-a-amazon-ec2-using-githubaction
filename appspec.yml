@@ -4,11 +4,11 @@ files:
   - source: /aws
     destination: /usr/local/codedeployresources
 hooks:
-  ApplicationStop:
+ # ApplicationStop:
     - location: aws/scripts/application-stop.sh
       timeout: 300
       runas: root
-  BeforeInstall:
+#  BeforeInstall:
     - location: aws/scripts/before-install.sh
       timeout: 300
       runas: root
@@ -16,11 +16,11 @@ hooks:
     - location: aws/scripts/after-install.sh
       timeout: 300
       runas: root
-  ApplicationStart:
+ # ApplicationStart:
     - location: aws/scripts/application-start.sh
       timeout: 300
       runas: root
-  ValidateService:
+ # ValidateService:
     - location: aws/scripts/validate-service.sh
       timeout: 300
       runas: root
