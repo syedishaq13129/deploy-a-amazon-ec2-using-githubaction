@@ -1,11 +1,8 @@
 name: Deploy Release to CodeDeploy
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'test1.0' # Specify the tag for the release to trigger the workflow
+  release:
+    types: [created]
 
 jobs:
   deploy:
@@ -14,11 +11,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.tag_name }}
 
       - name: Install AWS CLI
         run: |
           sudo apt-get update
           sudo apt-get install -y awscli
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -29,13 +29,13 @@ jobs:
       - name: Download Release ZIP
         run: |
           echo "Downloading release ZIP..."
-          curl -L -o test1.0.zip https://github.com/syedishaq13129/deploy-a-amazon-ec2-using-githubaction/archive/refs/tags/latest.zip
+          curl -L -o ${{ github.event.release.tag_name }}.zip https://github.com/${{ github.repository }}/archive/refs/tags/${{ github.event.release.tag_name }}.zip
           echo "Download complete."
 
       - name: Upload Release ZIP to S3
         run: |
           echo "Uploading release ZIP to S3..."
-          aws s3 cp test1.0.zip s3://codedeployanil0605/
+          aws s3 cp ${{ github.event.release.tag_name }}.zip s3://codedeployanil0605/
           echo "Upload complete."
 
       - name: Trigger CodeDeploy Deployment
@@ -45,7 +45,7 @@ jobs:
             --application-name demo-cd \
             --deployment-group-name demo-dg \
             --description "GitHub Release Deployment" \
-            --s3-location bucket=codedeployanil0605,key=test1.0.zip,bundleType=zip
+            --s3-location bucket=codedeployanil0605,key=${{ github.event.release.tag_name }}.zip,bundleType=zip
           echo "Deployment triggered."
 
         env:
