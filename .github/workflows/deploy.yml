@@ -40,7 +40,7 @@ jobs:
 
       - name: Trigger CodeDeploy Deployment
         env:
-          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}.zip
+          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
           echo "Triggering CodeDeploy deployment..."
           aws deploy create-deployment \
