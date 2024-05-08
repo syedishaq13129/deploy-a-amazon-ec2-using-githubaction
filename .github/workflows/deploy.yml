@@ -50,9 +50,13 @@ jobs:
             --s3-location bucket=codedeployanil0605,key=${{ github.event.release.tag_name }}.zip,bundleType=zip
           echo "Deployment triggered."
 
-      - name: Keep first 10 objects and delete the rest
+      # This script deletes all S3 objects in the 'codedeployanil0605' bucket except for the first 10 objects with the latest 'LastModified' timestamp
+
+      - name: Delete old S3 objects
         run: |
-          objects=$(aws s3api list-objects-v2 --bucket codedeployanil0605  --query 'Contents[].{Key: Key, LastModified: LastModified}' --output json | jq -r '.[] | "\(.Key) \(.LastModified)"' | sort -k2 -r | head -n 5 | awk '{print $1}')
-          for object in $(aws s3api list-objects-v2 --bucket codedeployanil0605  --query 'Contents[].{Key: Key}' --output text | grep -vx "$objects"); do
-            aws s3 rm s3://codedeployanil0605 /$object
+          objects=$(aws s3api list-objects-v2 --bucket codedeployanil0605 --query 'Contents[].{Key: Key, LastModified: LastModified}' --output json | jq -r '.[] | "\(.Key) \(.LastModified)"' | sort -k2 -r)
+          latest_5_objects=$(echo "$objects" | head -n 5 | awk '{print $1}')
+          remaining_objects=$(echo "$objects" | awk 'NR > 5 {print $1}')
+          for object in $remaining_objects; do
+            aws s3api delete-object --bucket codedeployanil0605 --key $object
           done
