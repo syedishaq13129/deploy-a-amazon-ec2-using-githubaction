@@ -50,23 +50,9 @@ jobs:
             --s3-location bucket=codedeployanil0605,key=${{ github.event.release.tag_name }}.zip,bundleType=zip
           echo "Deployment triggered."
 
-      - name: Delete Old Files
+      - name: Delete old S3 objects
         run: |
-          # Set the name of the S3 bucket
-          BUCKET_NAME=codedeployanil0605
-          # Set the prefix for the files in the bucket
-          PREFIX=syed
-          # Get the list of files in the bucket
-          FILES=$(aws s3 ls s3://$BUCKET_NAME/$PREFIX --recursive --human-readable | awk '{print $4}')
-          # Get the number of files in the bucket
-          NUM_FILES=$(aws s3 ls s3://$BUCKET_NAME/$PREFIX --recursive | wc -l)
-          # If there are more than 5 files in the bucket
-          if [ $NUM_FILES -gt 5 ]; then
-            # Remove the oldest files
-            for i in $(seq 1 $((NUM_FILES-5))); do
-              FILE=$(echo $FILES | head -n $i | tail -n 1)
-              aws s3 rm s3://$BUCKET_NAME/$FILE
-              FILES=$(echo $FILES | sed -e "s/$FILE//")
-              NUM_FILES=$((NUM_FILES-1))
-            done
-          fi
+          objects=$(aws s3api list-objects-v2 --bucket <your-bucket-name> --query 'Contents[].{Key: Key, LastModified: LastModified}' --output json | jq -r '.[] | "\(.Key) \(.LastModified)"' | sort -k2 | tail -n +11 | awk '{print $1}')
+          for object in $objects; do
+           aws s3api delete-object --bucket <your-bucket-name> --key $object
+          done
