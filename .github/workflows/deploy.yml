@@ -54,7 +54,7 @@ jobs:
 
       - name: Delete old S3 objects
         run: |
-          objects=$(aws s3api list-objects-v2 --bucket codedeployanil0605 --query 'Contents[].{Key: Key, LastModified: LastModified}' --output json | jq -r '.[] | "\(.Key) \(.LastModified)"' | sort -k2 -r)
+          objects=$(aws s3api list-objects-v2 --bucket codedeployanil0605 --query 'Contents[].{Key: Key, LastModified: LastModified}' --output json | jq -r '.[] | "\(.Key) \(.LastModified)"' | sort -k2)
           latest_5_objects=$(echo "$objects" | head -n 5 | awk '{print $1}')
           remaining_objects=$(echo "$objects" | awk 'NR > 5 {print $1}')
           for object in $remaining_objects; do
