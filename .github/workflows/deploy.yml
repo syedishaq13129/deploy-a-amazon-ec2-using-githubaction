@@ -45,7 +45,7 @@ jobs:
           echo "Triggering CodeDeploy deployment..."
           aws deploy create-deployment \
             --application-name demo-cd \
-            --deployment-group-name demo-dg \
+            --deployment-group-name feature_deployment \
             --description "GitHub Release Deployment" \
             --s3-location bucket=codedeployanil0605,key=${{ github.event.release.tag_name }}.zip,bundleType=zip
           echo "Deployment triggered." 
