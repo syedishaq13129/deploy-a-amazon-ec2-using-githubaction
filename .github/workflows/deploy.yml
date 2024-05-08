@@ -48,4 +48,27 @@ jobs:
             --deployment-group-name demo-dg \
             --description "GitHub Release Deployment" \
             --s3-location bucket=codedeployanil0605,key=${{ github.event.release.tag_name }}.zip,bundleType=zip
-          echo "Deployment triggered." 
+          echo "Deployment triggered."
+
+      - name: Delete Old Files
+        run: |
+          # Set the name of the S3 bucket
+          BUCKET_NAME=codedeployanil0605
+
+          # Set the prefix for the files in the bucket
+          PREFIX=10
+
+          # Get the list of files in the bucket
+          FILES=$(aws s3 ls s3://$BUCKET_NAME/$PREFIX --recursive | sort -k 6)
+
+          # Get the number of files in the bucket
+          NUM_FILES=$(aws s3 ls s3://$BUCKET_NAME/$PREFIX --recursive | wc -l)
+
+          # If there are more than 10 files in the bucket
+          if [ $NUM_FILES -gt 10 ]; then
+            # Remove the oldest files
+            for i in $(seq 1 $((NUM_FILES-10))); do
+              FILE=$(echo $FILES | head -n $i | tail -n 1)
+              aws s3 rm s3://$BUCKET_NAME/$FILE
+            done
+          fi
