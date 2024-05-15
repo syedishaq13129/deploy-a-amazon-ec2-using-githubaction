@@ -35,7 +35,7 @@ jobs:
       - name: Upload Release ZIP to S3
         run: |
           echo "Uploading release ZIP to S3..."
-          aws s3 cp ${{ github.event.release.tag_name }}.zip s3://codedeployanil0605/
+          aws s3 cp ${{ github.event.release.tag_name }}.zip s3://deepak30101997/
           echo "Upload complete."
 
       - name: Trigger CodeDeploy Deployment
